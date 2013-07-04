@@ -24,10 +24,11 @@ var ApiEvolution = function() {
 					// deactivate and return;
 					api.CURRENT_PROJECT = null;
 					$(e.target).closest('li').removeClass('active');
+					$("#current-project").text('Projects');
 					return;
 				}
 				api.CURRENT_PROJECT = $(e.target).text();
-				$("#projects-nav").text(api.CURRENT_PROJECT);
+				$("#current-project").text(api.CURRENT_PROJECT);
 				$(".nav-projects-ul li").removeClass("active");
 				$(e.target).closest('li').toggleClass("active");
 			});

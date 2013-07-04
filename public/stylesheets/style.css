@@ -1,9 +1,9 @@
 body {
-	font-family: "Lucida Grande" sans-serif;
+	font-family: "Open Sans" sans-serif;
 }
 h1.logo-heading {
 	font-size:55px;
-	font-weight:normal;
+	font-weight:lighter;
 }
 .navbar {
 	height:100%;
@@ -61,7 +61,7 @@ h1.logo-heading {
 
 .dropdown-menu ul li a {
   cursor: pointer;
-  font-size:11px;
+  font-size:14px;
 }
 .dropdown-menu ul li a input[type=checkbox] {
   height: 16px;
