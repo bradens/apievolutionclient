@@ -1,0 +1,107 @@
+body {
+	font-family: "Lucida Grande" sans-serif;
+}
+h1.logo-heading {
+	font-size:55px;
+	font-weight:normal;
+}
+.navbar {
+	height:100%;
+}
+.navbar ul.nav {
+	margin:10px 10px 0 0 ;
+}
+.navbar ul li:first-child {
+    border-left: none;
+}
+.navbar li {
+	background-color:rgba(0,0,0,.05);
+	padding:5px;
+  padding-left: 0;
+}
+.navbar li a {
+	padding: 5px 10px;
+}
+.navbar ul[class*=nav] li {
+  width:260px;
+  display:inline-block;
+  -webkit-transition:all .1s ease-in;
+  transition:all .1s ease-in;
+  -moz-transition: all .1s ease-in;
+}
+.navbar ul[class*=nav] li:hover {
+  background-color:rgba(0,0,50,.1);
+}
+#nav {
+	padding:10px;
+}
+.caret {
+	vertical-align: top !important;
+	border-top-color: grey !important;
+}
+.dropdown-menu ul {
+  width:auto;
+  float: left;
+  display:inline-block;
+  list-style-type: none;
+  margin-left: 0;
+  margin-bottom: 0;
+  padding-left: 10px;
+  padding-right: 10px;
+  border-left: 1px solid rgba(black, 0.1);
+}
+.dropdown-menu {
+  margin-top:-5px;
+  min-width:567px;
+}
+.dropdown:hover .dropdown-menu {
+	display:block;
+} 
+/**************** Toggles **************/
+
+.dropdown-menu ul li a {
+  cursor: pointer;
+  font-size:11px;
+}
+.dropdown-menu ul li a input[type=checkbox] {
+  height: 16px;
+  margin-right: 5px;
+}
+.dropdown-menu ul li a span {
+  vertical-align: middle;
+}
+
+.navbar ul[class*=nav] li.active {
+  background-color: #4c66a4;
+  color:whitesmoke !important;
+} 
+
+.navbar ul[class*=nav] li.active span {
+  color:whitesmoke;  
+  text-shadow: 0 1px rgba(0,0,0,.05);
+}
+
+.loading {
+  background-color: papayaWhip;
+  font-size:14px; 
+  color:black;
+  text-shadow:0 -1px 0 white; 
+  position:absolute;
+  left:48%;
+  top:0;
+  border-bottom-left-radius:3px;
+  border-bottom-right-radius:3px;
+  z-index:9999;
+  padding:3px;
+}
+/**************** Graphs ****************/ 
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.area {
+  fill: steelblue;
+}

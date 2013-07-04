@@ -1,0 +1,20 @@
+<<<<<<< HEAD
+.DS_Store
+.class
+
+=======
+lib-cov
+*.seed
+*.log
+*.csv
+*.dat
+*.out
+*.pid
+*.gz
+config.js
+pids
+logs
+results
+
+npm-debug.log
+>>>>>>> 7591ab8... Initial commit
