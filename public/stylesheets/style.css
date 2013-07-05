@@ -39,6 +39,9 @@ h1.logo-heading {
 	vertical-align: top !important;
 	border-top-color: grey !important;
 }
+#metric-dd {
+  width:400px;
+}
 .dropdown-menu ul {
   width:auto;
   float: left;

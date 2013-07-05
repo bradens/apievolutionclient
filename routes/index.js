@@ -25,7 +25,7 @@ exports.projects = function(req, res) {
 exports.getMetricData = function(req, res) {
 	var pgclient = new pg.Client(conString);
 	pgclient.connect(function(err) {
-		pgclient.query("SELECT commit_date, metric FROM metrics WHERE metric_type=$1 AND pid=$2", [req.query.metric_type, req.query.pid], function(err, result) {
+		pgclient.query("SELECT commit_date, metric FROM metrics WHERE metric_type=$1 AND pid=$2 AND metric<>'0' ORDER BY commit_date ASC", [req.query.metric_type, req.query.pid], function(err, result) {
 			console.log(req.query.metric_type);
 			console.log(req.query.pid);
 			console.log(JSON.stringify(result.rows));

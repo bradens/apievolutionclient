@@ -76,6 +76,7 @@ var ApiEvolution = function() {
 
 		if ($li.hasClass("active")){
 			// just remove the graph and return
+			$("#current-metric").text("Metrics");
 			$(".container").empty();
 			$li.removeClass("active");
 			return;
@@ -85,6 +86,7 @@ var ApiEvolution = function() {
 		$(".nav-metrics-ul li").removeClass("active");
 		$li.toggleClass("active");
 		metric_type = $a.text();
+		$("#current-metric").text(metric_type);
 		$.ajax({
 			type: "GET", 
 			dataType: "json",
