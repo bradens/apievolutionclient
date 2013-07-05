@@ -44,7 +44,13 @@ var ApiEvolution = function() {
 				$("#current-project").text(api.CURRENT_PROJECT);
 				$(".nav-projects-ul li").removeClass("active");
 				$(e.target).closest('li').toggleClass("active");
+
+				// Redraw the metric
+				api.loadMetricData(api.current_metric, api.CURRENT_PROJECT);
 			});
+
+			// Select an initial project
+			$(".nav-projects-dd li a").first().click();
 		})
 		.fail(function(msg) {
 			console.log(msg);
@@ -75,6 +81,16 @@ var ApiEvolution = function() {
 			$(".nav-metrics-dd").append("<ul class='nav-metrics-ul'></ul>");
 			var $ul = $(".nav-metrics-ul").append(template(msg));
 			$(".nav-metrics-dd li a").click(slf.toggleMetric);
+
+			function selectFirstMetric() {
+				if (!api.CURRENT_PROJECT) {
+					setTimeout(selectFirstMetric,100);
+				}
+				else {
+					$(".nav-metrics-dd li a").first().click();
+				}
+			};
+			selectFirstMetric();
 		})
 		.fail(function(msg) {
 			console.log(msg);
@@ -100,6 +116,12 @@ var ApiEvolution = function() {
 		$li.toggleClass("active");
 		metric_type = $a.text();
 		$("#current-metric").text(metric_type);
+
+		slf.loadMetricData(metric_type, api.CURRENT_PROJECT);
+	};
+
+	this.loadMetricData = function(metric_type, project_id) {
+		var slf = this;
 		$.ajax({
 			type: "GET", 
 			dataType: "json",
@@ -109,7 +131,7 @@ var ApiEvolution = function() {
 			},
 			data: {
 				metric_type: metric_type,
-				pid: api.CURRENT_PROJECT
+				pid: project_id
 			}
 		}).done(function(msg) {
 			msg = $.parseJSON(msg);
@@ -125,7 +147,7 @@ var ApiEvolution = function() {
 				slf.drawMetric(metric_type, msg);
 			}
 		});
-	};
+	}
 
 	this.loading = function() {
 		$(".loading").fadeIn();
@@ -177,11 +199,6 @@ var ApiEvolution = function() {
 		  	.append("g")
 		    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-			// data.metrics.forEach(function(d) {
-			// 	d.commit_date = new Date(d.commit_date);
-		 //   		d.metric = + parseInt(d.metric);
-			// });
-
 			x.domain(d3.extent(slidemetrics, function(d) { return d.commit_date; }));
 			y.domain([0, d3.max(slidemetrics, function(d) { return d.metric; })]);
 
@@ -203,69 +220,6 @@ var ApiEvolution = function() {
 			  .attr("y", 6)
 			  .attr("dy", ".71em")
 			  .style("text-anchor", "end")
-			  .text("Metric");
+			  .text(METRIC_TYPE);
 	};
-
-	this.draw = function() {
-		var margin = {top: 20, right: 20, bottom: 30, left: 50},
-	    width = 1170 - margin.left - margin.right,
-	    height = 500 - margin.top - margin.bottom;
-
-		var parseDate = d3.time.format("%d-%b-%y").parse;
-
-		var x = d3.time.scale()
-		    .range([0, width]);
-
-		var y = d3.scale.linear()
-		    .range([height, 0]);
-
-		var xAxis = d3.svg.axis()
-		    .scale(x)
-		    .orient("bottom");
-
-		var yAxis = d3.svg.axis()
-		    .scale(y)
-		    .orient("left");
-
-		var area = d3.svg.area()
-		    .x(function(d) { return x(d.date); })
-		    .y0(height)
-		    .y1(function(d) { return y(d.close); });
-
-		var svg = d3.select(".container").append("svg")
-		    .attr("width", width + margin.left + margin.right)
-		    .attr("height", height + margin.top + margin.bottom)
-		  .append("g")
-		    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-		d3.tsv("data.tsv", function(Error, data) {
-		  data.forEach(function(d) {
-		    d.date = parseDate(d.date);
-		    d.close = +d.close;
-		  });
-
-		  x.domain(d3.extent(data, function(d) { return d.date; }));
-		  y.domain([0, d3.max(data, function(d) { return d.close; })]);
-
-		  svg.append("path")
-		      .datum(data)
-		      .attr("class", "area")
-		      .attr("d", area);
-
-		  svg.append("g")
-		      .attr("class", "x axis")
-		      .attr("transform", "translate(0," + height + ")")
-		      .call(xAxis);
-
-		  svg.append("g")
-		      .attr("class", "y axis")
-		      .call(yAxis)
-		    .append("text")
-		      .attr("transform", "rotate(-90)")
-		      .attr("y", 6)
-		      .attr("dy", ".71em")
-		      .style("text-anchor", "end")
-		      .text("Price ($)");
-		});
-	}
 };
