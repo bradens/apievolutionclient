@@ -10,6 +10,7 @@ exports.metrics = function(req, res) {
 		pgclient.query("SELECT distinct metric_type FROM metrics ORDER BY metric_type", function(err, result) {
 			console.log(JSON.stringify(result.rows));
 			res.json("{\"metrics\": " + JSON.stringify(result.rows) + "}");
+			pgclient.end();
 		});
 	});
 };
@@ -19,6 +20,7 @@ exports.projects = function(req, res) {
 		pgclient.query("SELECT distinct pid FROM projects ORDER BY pid", function(err, result) {
 			console.log(JSON.stringify(result.rows));
 			res.json("{\"projects\": " + JSON.stringify(result.rows) + "}");
+			pgclient.end();
 		});
 	});
 };
@@ -31,6 +33,7 @@ exports.getMetricData = function(req, res) {
 			console.log(JSON.stringify(result.rows));
 			console.log(err);
 			res.json("{\"metrics\": " + JSON.stringify(result.rows) + "}");
+			pgclient.end();
 		});
 	});
 };
