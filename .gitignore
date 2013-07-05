@@ -1,8 +1,6 @@
-<<<<<<< HEAD
 .DS_Store
 .class
 
-=======
 lib-cov
 *.seed
 *.log
@@ -15,6 +13,5 @@ config.js
 pids
 logs
 results
-
+node_modules
 npm-debug.log
->>>>>>> 7591ab8... Initial commit
