@@ -1,4 +1,17 @@
 var ApiEvolution = function() {
+	this.initializeSlider = function() {
+		$(".slider").slider({
+			min: 0,
+			max: 1000,
+			step: 1, 
+			orientation: "horizontal",
+			value: 100,
+			handle: "square"
+		}).on("slideStop", function(e) {
+			api.SLIDING_TIME_WINDOW = $(e.target).val();
+			api.drawMetric(api.current_metric, api.current_data);
+		});
+	};
 	this.initializeProjects = function() {
 		var slf = this;
 		$.ajax({
@@ -77,7 +90,7 @@ var ApiEvolution = function() {
 		if ($li.hasClass("active")){
 			// just remove the graph and return
 			$("#current-metric").text("Metrics");
-			$(".container").empty();
+			$(".container.graph").empty();
 			$li.removeClass("active");
 			return;
 		}
@@ -100,6 +113,8 @@ var ApiEvolution = function() {
 			}
 		}).done(function(msg) {
 			msg = $.parseJSON(msg);
+			api.current_data = msg;
+			api.current_metric = metric_type;
 			if (msg.metrics.length === 0){
 				$(".no-metrics").fadeIn();
 				setTimeout(function() {
@@ -118,11 +133,24 @@ var ApiEvolution = function() {
 
 	this.drawMetric = function(METRIC_TYPE, data) {
 		// Clear the old graph 
-		$(".container").empty();
+		$(".container.graph").empty();
 
 		var margin = {top: 20, right: 20, bottom: 30, left: 50},
 	    width = 1170 - margin.left - margin.right,
 	    height = 500 - margin.top - margin.bottom;
+
+	    var slidemetrics = [];
+
+	    for (var i = 0;i < data.metrics.length;i++) {
+	    	var sum = 0;
+	    	for (var j = i-api.SLIDING_TIME_WINDOW;j <= i;j++) {
+	    		if (data.metrics[j] !== undefined && data.metrics[j] !== null) {
+	    			// we have a valid point
+	    			sum += data.metrics[j].metric;
+	    		}
+	    	}
+	    	slidemetrics.push({commit_date: new Date(data.metrics[i].commit_date), metric: sum});
+	    }
 
 		var x = d3.time.scale()
 		    .range([0, width]);
@@ -149,16 +177,16 @@ var ApiEvolution = function() {
 		  	.append("g")
 		    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-			data.metrics.forEach(function(d) {
-				d.commit_date = new Date(d.commit_date);
-		   		d.metric = + parseInt(d.metric);
-			});
+			// data.metrics.forEach(function(d) {
+			// 	d.commit_date = new Date(d.commit_date);
+		 //   		d.metric = + parseInt(d.metric);
+			// });
 
-			x.domain(d3.extent(data.metrics, function(d) { return d.commit_date; }));
-			y.domain([0, d3.max(data.metrics, function(d) { return d.metric; })]);
+			x.domain(d3.extent(slidemetrics, function(d) { return d.commit_date; }));
+			y.domain([0, d3.max(slidemetrics, function(d) { return d.metric; })]);
 
 			svg.append("path")
-			  .datum(data.metrics)
+			  .datum(slidemetrics)
 			  .attr("class", "area")
 			  .attr("d", area);
 

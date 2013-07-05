@@ -108,3 +108,15 @@ h1.logo-heading {
 .area {
   fill: steelblue;
 }
+.slider, .slider-explanation {
+  text-align:center;
+  width:500px;
+  display:block;
+  margin:0 auto;
+}
+.slider-selection {
+  background: #8283FF;
+}
+.slider-track {
+  background: #BABABA;
+}
