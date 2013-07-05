@@ -23,7 +23,7 @@ h1.logo-heading {
 	padding: 5px 10px;
 }
 .navbar ul[class*=nav] li {
-  width:260px;
+  width:300px;
   display:inline-block;
   -webkit-transition:all .1s ease-in;
   transition:all .1s ease-in;
@@ -55,7 +55,7 @@ h1.logo-heading {
 }
 .dropdown-menu {
   margin-top:-5px;
-  min-width:567px;
+  min-width:635px;
 }
 .dropdown:hover .dropdown-menu {
 	display:block;

@@ -2,11 +2,11 @@ var ApiEvolution = function() {
 	this.initializeSlider = function() {
 		$(".slider").slider({
 			min: 0,
-			max: 1000,
+			max: 400,
 			step: 1, 
 			orientation: "horizontal",
-			value: 100,
-			handle: "square"
+			value: 50,
+			handle: "circle"
 		}).on("slideStop", function(e) {
 			api.SLIDING_TIME_WINDOW = $(e.target).val();
 			api.drawMetric(api.current_metric, api.current_data);
