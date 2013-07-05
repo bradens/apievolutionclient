@@ -7,7 +7,7 @@ exports.index = function(req, res){
 exports.metrics = function(req, res) {
 	var pgclient = new pg.Client(conString);
 	pgclient.connect(function(err) {
-		pgclient.query("SELECT distinct metric_type FROM metrics", function(err, result) {
+		pgclient.query("SELECT distinct metric_type FROM metrics ORDER BY metric_type", function(err, result) {
 			console.log(JSON.stringify(result.rows));
 			res.json("{\"metrics\": " + JSON.stringify(result.rows) + "}");
 		});
@@ -16,7 +16,7 @@ exports.metrics = function(req, res) {
 exports.projects = function(req, res) {
 	var pgclient = new pg.Client(conString);
 	pgclient.connect(function(err) {
-		pgclient.query("SELECT distinct pid FROM projects", function(err, result) {
+		pgclient.query("SELECT distinct pid FROM projects ORDER BY pid", function(err, result) {
 			console.log(JSON.stringify(result.rows));
 			res.json("{\"projects\": " + JSON.stringify(result.rows) + "}");
 		});
