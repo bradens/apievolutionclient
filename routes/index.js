@@ -37,3 +37,20 @@ exports.getMetricData = function(req, res) {
 		});
 	});
 };
+exports.getMetricDataSum = function(req, res) {
+	var pgclient = new pg.Client(conString);
+	pgclient.connect(function(err) {
+		pgclient.query("select date_trunc as commit_date, pid, metric_type, sum(metric)  \
+		 as metric from (select date_trunc('day', commit_date), pid, metric_type, metric \
+		 from metrics where metric_type=$1 AND pid=$2) as updated group by date_trunc, pid, \
+		 metric_type ORDER BY date_trunc ASC", [req.query.metric_type, req.query.pid],
+		 function(err, result) {
+		 	console.log(req.query.metric_type);
+			console.log(req.query.pid);
+			console.log(JSON.stringify(result.rows));
+			console.log(err);
+			res.json("{\"metrics\": " + JSON.stringify(result.rows) + "}");
+			pgclient.end();
+		 });
+	});
+}
