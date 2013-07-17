@@ -174,11 +174,24 @@ var ApiEvolution = function() {
 	    	slidemetrics.push({commit_date: new Date(data.metrics[i].commit_date), metric: sum});
 	    }
 
-		var x = d3.time.scale()
+
+	  var x = d3.time.scale()
+		    .domain(d3.extent(slidemetrics, function (d) {
+		    return d.commit_date;
+		}))
 		    .range([0, width]);
 
 		var y = d3.scale.linear()
+		    .domain(d3.extent(slidemetrics, function (d) {
+		    return d.metric;
+		}))
 		    .range([height, 0]);
+
+		// var x = d3.time.scale()
+		//     .range([0, width]);
+
+		// var y = d3.scale.linear()
+		//     .range([height, 0]);
 
 		var xAxis = d3.svg.axis()
 		    .scale(x)
@@ -188,38 +201,69 @@ var ApiEvolution = function() {
 		    .scale(y)
 		    .orient("left");
 
-		var area = d3.svg.area()
-		    .x(function(d) { return x(new Date(d.commit_date)); })
-		    .y0(height)
-		    .y1(function(d) { return y(d.metric); });
+		var line = d3.svg.area()
+		    .x(function(d) { 
+		    	return x(new Date(d.commit_date)); 
+		    })
+		    .y(function(d) { 
+		    	return y(d.metric); 
+		    });
 
-		var svg = d3.select(".container").append("svg")
+		var zoom = d3.behavior.zoom()
+				.x(x)
+				.y(y)
+				.on("zoom", zoomed);
+
+		var svg = d3.select(".container").append("svg:svg")
 		    .attr("width", width + margin.left + margin.right)
 		    .attr("height", height + margin.top + margin.bottom)
-		  	.append("g")
+		  	.append("svg:g")
 		    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+		    
 
-			x.domain(d3.extent(slidemetrics, function(d) { return d.commit_date; }));
-			y.domain([0, d3.max(slidemetrics, function(d) { return d.metric; })]);
+		x.domain(d3.extent(slidemetrics, function(d) { return d.commit_date; }));
+		y.domain([0, d3.max(slidemetrics, function(d) { return d.metric; })]);
 
-			svg.append("path")
-			  .datum(slidemetrics)
-			  .attr("class", "area")
-			  .attr("d", area);
+		svg.append("path")
+		  .datum(slidemetrics)
+		  .attr("class", "line")
+		  .attr("d", line);
 
-			svg.append("g")
-			  .attr("class", "x axis")
-			  .attr("transform", "translate(0," + height + ")")
-			  .call(xAxis);
+		svg.append("svg:g")
+		  .attr("class", "x axis")
+		  .attr("transform", "translate(0," + height + ")")
+		  .call(xAxis);
 
-			svg.append("g")
-			  .attr("class", "y axis")
-			  .call(yAxis)
-			.append("text")
-			  .attr("transform", "rotate(-90)")
-			  .attr("y", 6)
-			  .attr("dy", ".71em")
-			  .style("text-anchor", "end")
-			  .text(METRIC_TYPE);
+		svg.append("g")
+		  .attr("class", "y axis")
+		  .call(yAxis)
+		.append("text")
+		  .attr("transform", "rotate(-90)")
+		  .attr("y", 6)
+		  .attr("dy", ".71em")
+		  .style("text-anchor", "end")
+		  .text(METRIC_TYPE);
+
+	  svg.append("rect")
+		  .attr("class", "pane")
+		  .attr("width", width)
+		  .attr("height", height)
+		  .call(zoom);
+
+	  function zoomed() {
+	  	console.log(d3.event.translate);
+	    console.log(d3.event.scale);
+  		svg.select("g.x.axis").call(xAxis);
+
+      var yExtent = d3.extent(slidemetrics.filter(function(d) { 
+		      var dt = x(d.commit_date);
+		        return dt > 0 && dt < width;
+		  }), function(d) { return d.metric; });
+
+  		y.domain(yExtent).nice();
+  		svg.select("g.y.axis").call(yAxis);
+	    svg.select("path.line")
+        .attr("d", line);
+		  }
 	};
 };

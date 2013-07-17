@@ -101,13 +101,43 @@ h1.logo-heading {
 .axis path,
 .axis line {
   fill: none;
-  stroke: #000;
+  stroke: steelblue;
   shape-rendering: crispEdges;
 }
 
 .area {
   fill: steelblue;
 }
+
+.axis path, .axis line {
+  fill: none;
+  stroke-width: .5px;
+}
+
+.x.axis path {
+  stroke: steelblue;
+}
+
+.x.axis line {
+  stroke: #fff;
+  stroke-opacity: .5;
+}
+
+.y.axis line {
+  stroke: steelblue;
+}
+
+path.line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 1px;
+}
+rect.pane {
+  cursor: move;
+  fill: none;
+  pointer-events: all;
+}
+
 .slider, .slider-explanation {
   text-align:center;
   width:500px;
