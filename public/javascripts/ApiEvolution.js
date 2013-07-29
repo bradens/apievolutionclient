@@ -174,7 +174,6 @@ var ApiEvolution = function() {
 	    	slidemetrics.push({commit_date: new Date(data.metrics[i].commit_date), metric: sum});
 	    }
 
-
 	  var x = d3.time.scale()
 		    .domain(d3.extent(slidemetrics, function (d) {
 		    return d.commit_date;
@@ -187,12 +186,6 @@ var ApiEvolution = function() {
 		}))
 		    .range([height, 0]);
 
-		// var x = d3.time.scale()
-		//     .range([0, width]);
-
-		// var y = d3.scale.linear()
-		//     .range([height, 0]);
-
 		var xAxis = d3.svg.axis()
 		    .scale(x)
 		    .orient("bottom");
@@ -201,7 +194,7 @@ var ApiEvolution = function() {
 		    .scale(y)
 		    .orient("left");
 
-		var line = d3.svg.area()
+		var line = d3.svg.line()
 		    .x(function(d) { 
 		    	return x(new Date(d.commit_date)); 
 		    })
@@ -251,8 +244,8 @@ var ApiEvolution = function() {
 		  .call(zoom);
 
 	  function zoomed() {
-	  	console.log(d3.event.translate);
-	    console.log(d3.event.scale);
+	  	// console.log(d3.event.translate);
+	   //  console.log(d3.event.scale);
   		svg.select("g.x.axis").call(xAxis);
 
       var yExtent = d3.extent(slidemetrics.filter(function(d) { 
